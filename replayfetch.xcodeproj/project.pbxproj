@@ -11,7 +11,8 @@
 		37A3F9ED235BC0F700A63214 /* ReplayFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A3F9EC235BC0F700A63214 /* ReplayFetcher.swift */; };
 		37A3F9EF235BC0FE00A63214 /* NetworkPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A3F9EE235BC0FE00A63214 /* NetworkPath.swift */; };
 		37A3F9F1235BC3DC00A63214 /* ReplayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A3F9F0235BC3DC00A63214 /* ReplayService.swift */; };
-		37A3F9F3235BC46300A63214 /* ReplayMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A3F9F2235BC46300A63214 /* ReplayMetadata.swift */; };
+		37A3F9F3235BC46300A63214 /* ReplayInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A3F9F2235BC46300A63214 /* ReplayInfo.swift */; };
+		37A3F9F5235BCEBF00A63214 /* ReplayMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A3F9F4235BCEBF00A63214 /* ReplayMetadata.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -32,7 +33,8 @@
 		37A3F9EC235BC0F700A63214 /* ReplayFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplayFetcher.swift; sourceTree = "<group>"; };
 		37A3F9EE235BC0FE00A63214 /* NetworkPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkPath.swift; sourceTree = "<group>"; };
 		37A3F9F0235BC3DC00A63214 /* ReplayService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplayService.swift; sourceTree = "<group>"; };
-		37A3F9F2235BC46300A63214 /* ReplayMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplayMetadata.swift; sourceTree = "<group>"; };
+		37A3F9F2235BC46300A63214 /* ReplayInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplayInfo.swift; sourceTree = "<group>"; };
+		37A3F9F4235BCEBF00A63214 /* ReplayMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplayMetadata.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,9 +69,10 @@
 			children = (
 				3734783B235BC0C000EF8163 /* main.swift */,
 				37A3F9EC235BC0F700A63214 /* ReplayFetcher.swift */,
-				37A3F9EE235BC0FE00A63214 /* NetworkPath.swift */,
 				37A3F9F0235BC3DC00A63214 /* ReplayService.swift */,
-				37A3F9F2235BC46300A63214 /* ReplayMetadata.swift */,
+				37A3F9EE235BC0FE00A63214 /* NetworkPath.swift */,
+				37A3F9F2235BC46300A63214 /* ReplayInfo.swift */,
+				37A3F9F4235BCEBF00A63214 /* ReplayMetadata.swift */,
 			);
 			path = replayfetch;
 			sourceTree = "<group>";
@@ -133,7 +136,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				37A3F9F1235BC3DC00A63214 /* ReplayService.swift in Sources */,
-				37A3F9F3235BC46300A63214 /* ReplayMetadata.swift in Sources */,
+				37A3F9F5235BCEBF00A63214 /* ReplayMetadata.swift in Sources */,
+				37A3F9F3235BC46300A63214 /* ReplayInfo.swift in Sources */,
 				37A3F9EF235BC0FE00A63214 /* NetworkPath.swift in Sources */,
 				37A3F9ED235BC0F700A63214 /* ReplayFetcher.swift in Sources */,
 				3734783C235BC0C000EF8163 /* main.swift in Sources */,
