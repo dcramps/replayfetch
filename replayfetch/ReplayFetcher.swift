@@ -23,20 +23,14 @@ final class ReplayFetcher {
     replayListFetch = replayService
       .replayList()
       .catch { _ in Just([]) }
-      .sink(receiveValue: {
-        $0.forEach {
-          print("\($0.date): \($0.map)")
-        }
-
-        self.getReplay(replayID: $0.first!.replayID)
-      })
+      .assign(to: \.replays, on: self)
   }
 
   func getReplay(replayID: String) {
     replayFetch = replayService
       .getReplay(replayID)
       .sink(receiveCompletion: { completion in
-        print("Finished")
+        print("Finished downloading.")
       }, receiveValue: { files in
         self.store(files: files, for: replayID)
       })
@@ -52,6 +46,36 @@ final class ReplayFetcher {
 
   private var replayListFetch: AnyCancellable? = nil
   private var replayFetch: AnyCancellable? = nil
+  private var replays: [ReplayInfo] = [] {
+    didSet {
+      printList()
+    }
+  }
+  private var lastUserInput: String? = nil {
+    didSet {
+      handleInput()
+    }
+  }
+
+  private func printList() {
+    for (index, replay) in replays.enumerated() {
+      print("\(index)\t\(replay.date)\t\(replay.map)")
+    }
+    print("Enter # to download...")
+    lastUserInput = readLine(strippingNewline: true)
+  }
+
+  private func handleInput() {
+    guard
+      let lastUserInput = lastUserInput,
+      let asInteger = Int(lastUserInput),
+      let replay = replays[safe: asInteger] else
+    {
+      return
+    }
+
+    getReplay(replayID: replay.replayID)
+  }
 
   private func store(files: [File], for replayID: String) {
     do {
@@ -77,5 +101,11 @@ final class ReplayFetcher {
       }
       fileManager.createFile(atPath: filePath, contents: file.data, attributes: nil)
     }
+  }
+}
+
+public extension Collection {
+  subscript (safe index: Index) -> Element? {
+    return indices.contains(index) ? self[index] : nil
   }
 }
