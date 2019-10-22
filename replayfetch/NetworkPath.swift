@@ -4,6 +4,8 @@
 
 import Foundation
 
+// MARK: - NetworkPath
+
 struct NetworkPath {
   let scheme: String
   let host: Host
@@ -76,9 +78,13 @@ extension NetworkPath {
   }
 }
 
+// MARK: - Host
+
 enum Host: String {
   case production = "utreplay-public-service-prod10.ol.epicgames.com"
 }
+
+// MARK: - Method
 
 enum Method: String {
   case get

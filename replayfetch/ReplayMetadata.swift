@@ -4,9 +4,12 @@
 
 import Foundation
 
+// MARK: - ReplayState
 enum ReplayState: String, Decodable {
   case final = "Final"
 }
+
+// MARK: - ReplayMetaData
 
 struct ReplayMetadata: Decodable {
   let state: ReplayState

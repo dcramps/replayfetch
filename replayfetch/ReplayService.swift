@@ -5,6 +5,8 @@
 import Combine
 import Foundation
 
+// MARK: - ReplayService
+
 struct ReplayService {
 
   // MARK: Lifecycle

@@ -4,9 +4,13 @@
 
 import Foundation
 
+// MARK: - ReplayList
+
 struct ReplayList: Decodable {
   let replays: [ReplayInfo]
 }
+
+// MARK: - ReplayInfo
 
 struct ReplayInfo: Decodable {
   let replayID: String
