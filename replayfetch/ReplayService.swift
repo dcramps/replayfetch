@@ -28,21 +28,22 @@ struct ReplayService {
       .map { $0.data }
       .decode(type: ReplayList.self, decoder: decoder)
       .map { $0.replays }
-      .breakpointOnError()
       .eraseToAnyPublisher()
   }
 
   func getReplay(_ replayID: String) -> AnyPublisher<[File], Error> {
-    return session
-      .dataTaskPublisher(for: NetworkPath.replay(replayID, userID: userID).urlRequest)
-      .map { $0.data }
-      .decode(type: ReplayMetadata.self, decoder: decoder)
-      .eraseToAnyPublisher()
-      .map { metadata -> AnyPublisher<[File], Error> in
+    return getMetadata(replayID: replayID)
+      .map { metafile -> AnyPublisher<[File], Error> in
+        let metadata = try! self.decoder.decode(ReplayMetadata.self, from: metafile.data)
         var filePublishers: [AnyPublisher<File, Error>] = []
         for x in 0..<metadata.chunks {
           filePublishers.append(self.getChunk(replayID: replayID, chunkID: x))
         }
+
+        let metaPublisher = Just(metafile)
+          .setFailureType(to: Error.self)
+          .eraseToAnyPublisher()
+        filePublishers.append(metaPublisher)
 
         filePublishers.append(self.getHeader(replayID: replayID))
 
@@ -51,7 +52,6 @@ struct ReplayService {
           .collect()
           .eraseToAnyPublisher()
       }
-      .breakpointOnError()
       .flatMap { $0 }
       .eraseToAnyPublisher()
   }
@@ -59,30 +59,38 @@ struct ReplayService {
   // MARK: Private
 
   private let userID: String
-
   private let session: URLSession
   private let decoder: JSONDecoder
+
+  private func getMetadata(replayID: String) -> AnyPublisher<File, Error> {
+    return session
+      .dataTaskPublisher(for: NetworkPath.replay(replayID, userID: userID).urlRequest)
+      .map { File(directoryName: nil, fileName: "startDownload", data: $0.data) }
+      .mapError { $0 as Error }
+      .eraseToAnyPublisher()
+  }
 
   private func getChunk(replayID: String, chunkID: Int) -> AnyPublisher<File, Error> {
     return session
       .dataTaskPublisher(for: NetworkPath.chunk(replayID, chunkID: chunkID).urlRequest)
-      .map { File(filename: "chunk.\(chunkID)", data: $0.data) }
+      .map { File(directoryName: "file", fileName: "chunk.\(chunkID)", data: $0.data) }
       .mapError { $0 as Error }
-      .breakpointOnError()
       .eraseToAnyPublisher()
   }
 
   private func getHeader(replayID: String) -> AnyPublisher<File, Error> {
     return session
       .dataTaskPublisher(for: NetworkPath.header(replayID).urlRequest)
-      .map { File(filename: "replay.header", data: $0.data) }
+      .map { File(directoryName: "file", fileName: "replay.header", data: $0.data) }
       .mapError { $0 as Error }
-      .breakpointOnError()
       .eraseToAnyPublisher()
   }
 }
 
+// MARK: - File
+
 struct File {
-  let filename: String
+  let directoryName: String?
+  let fileName: String
   let data: Data
 }

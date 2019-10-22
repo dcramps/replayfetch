@@ -19,7 +19,6 @@ final class ReplayFetcher {
     replayListFetch = replayService
       .replayList()
       .catch { _ in Just([]) }
-      .breakpointOnError()
       .sink(receiveValue: {
         $0.forEach {
           print("\($0.date): \($0.map)")
@@ -51,12 +50,23 @@ final class ReplayFetcher {
 
   private func store(files: [File], for replayID: String) {
     let fm = FileManager()
-    files.forEach { file in
-      print("Writing \(file.filename)...")
-      let result = fm.createFile(atPath: fm.currentDirectoryPath.appending("/" + file.filename), contents: file.data, attributes: nil)
-      print("...\(result ? "success" : "failed")")
+    let replayPath = fm.currentDirectoryPath + "/" + replayID
+    do {
+      try fm.createDirectory(atPath: replayPath, withIntermediateDirectories: false, attributes: nil)
+      try files.forEach { file in
+        let filePath: String
+        if let subdirectory = file.directoryName {
+          let subdirectoryPath = replayPath + "/" + subdirectory
+          try fm.createDirectory(atPath: subdirectoryPath, withIntermediateDirectories: true, attributes: nil)
+          filePath = subdirectoryPath + "/" + file.fileName
+        } else {
+          filePath = replayPath.appending("/" + file.fileName)
+        }
+        fm.createFile(atPath: filePath, contents: file.data, attributes: nil)
+      }
+      exit(0)
+    } catch {
+      print("Fuck: \(error)")
     }
-    print("Done. Files are at \(fm.currentDirectoryPath)")
-    exit(0)
   }
 }
